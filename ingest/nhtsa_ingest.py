@@ -18,6 +18,7 @@ def fetch(url, params, max_retries=5):
             if resp.status_code == 429 or resp.status_code >= 500:
                 raise requests.HTTPError(f"retryable status {resp.status_code}")
             if resp.status_code == 400:
+                log.warning("HTTP 400 for %s %s: %s", url, params, resp.text[:200])
                 return []
             resp.raise_for_status()
             return resp.json().get("results") or []
@@ -39,7 +40,6 @@ ON CONFLICT ({key_col}, make, model, model_year) DO UPDATE
 RETURNING (xmax = 0) AS inserted
 """
 SOURCES = [
-    ("complaints", COMPLAINTS_URL, UPSERT.format(table="nhtsa_complaints_raw", key_col="odi_number"), "odiNumber"),
     ("recalls", RECALLS_URL, UPSERT.format(table="nhtsa_recalls_raw", key_col="campaign_number"), "NHTSACampaignNumber"),
 ]
 
