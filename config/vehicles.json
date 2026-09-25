@@ -1,0 +1,6 @@
+[
+  {"make": "TESLA", "model": "MODEL 3", "years": [2020, 2021, 2022, 2023]},
+  {"make": "TESLA", "model": "MODEL Y", "years": [2020, 2021, 2022, 2023]},
+  {"make": "FORD", "model": "F-150", "years": [2021, 2022]},
+  {"make": "HYUNDAI", "model": "IONIQ 5", "years": [2022, 2023]}
+]
