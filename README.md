@@ -8,7 +8,7 @@ root-cause reports for engineering review.
 | Stage | Scope | Status |
 |---|---|---|
 | 1 | Ingestion: recalls via NHTSA REST API, complaints via NHTSA bulk flat files; SHA-256 idempotent upserts, retry/backoff, per-run audit table | Done |
-| 2 | dbt silver/gold models, component hotspot index, data-quality tests; Airflow orchestration | In progress |
+| 2 | dbt silver/gold models, component hotspot index, 16 data tests; weekly Airflow DAG with a completeness gate that blocks dbt if any vehicle-year loads empty | Done |
 | 3 | Embeddings + pgvector retrieval | Planned |
 | 4 | Tool-calling RCA agent with engineering-review handoff | Planned |
 | 5 | Evaluation harness (accuracy, groundedness, abstention) with CI gate | Planned |
@@ -24,6 +24,13 @@ and HTTP 400 responses are logged instead of swallowed.
 ## Metric caveat
 NHTSA publishes no fleet sizes, so `gold.agg_component_hotspots` reports complaint *share* against
 a cross-vehicle baseline (`hotspot_ix`), not a true failure rate.
+
+## Orchestration
+`dags/nhtsa_defect_pipeline.py` (Airflow 3.3.2, Python 3.12) runs weekly:
+`ingest_recalls` + `ingest_complaints` -> `audit_completeness_gate` -> `dbt_build`.
+Each task uses its own virtualenv (`.venv`, `.venv-dbt`) because Airflow and dbt pin conflicting SQLAlchemy versions.
+Install Airflow with its constraints file:
+`pip install "apache-airflow==3.3.2" --constraint https://raw.githubusercontent.com/apache/airflow/constraints-3.3.2/constraints-3.12.txt`
 
 ## Run locally
 ```bash

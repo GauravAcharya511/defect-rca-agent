@@ -1,4 +1,4 @@
-import csv, hashlib, io, json, logging, os, sys, uuid, zipfile
+import csv, hashlib, io, json, logging, os, sys, time, uuid, zipfile
 from collections import defaultdict
 from pathlib import Path
 import psycopg, requests
@@ -40,9 +40,13 @@ RETURNING (xmax = 0) AS inserted
 def download(url):
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     dest = DATA_DIR / url.rsplit("/", 1)[-1]
+    max_age_days = float(os.getenv("NHTSA_MAX_AGE_DAYS", "7"))
     if dest.exists():
-        log.info("using cached %s (%.0f MB)", dest.name, dest.stat().st_size / 1e6)
-        return dest
+        age_days = (time.time() - dest.stat().st_mtime) / 86400
+        if age_days < max_age_days:
+            log.info("using cached %s (%.0f MB, %.1f days old)", dest.name, dest.stat().st_size / 1e6, age_days)
+            return dest
+        log.info("cached %s is %.1f days old (> %.0f), re-downloading", dest.name, age_days, max_age_days)
     log.info("downloading %s", url)
     tmp = dest.with_suffix(".part")
     with requests.get(url, stream=True, timeout=120) as r:

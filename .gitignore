@@ -7,3 +7,5 @@ dbt/target/
 dbt/logs/
 dbt/dbt_packages/
 .venv-dbt/
+.airflow/
+.venv-airflow/
