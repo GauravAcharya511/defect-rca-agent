@@ -1,0 +1,22 @@
+version: 2
+models:
+  - name: fct_component_monthly
+    data_tests:
+      - unique_combination:
+          arguments:
+            columns: [make, model, model_year, component_group, month]
+    columns:
+      - name: complaints
+        data_tests: [not_null]
+  - name: agg_component_hotspots
+    data_tests:
+      - unique_combination:
+          arguments:
+            columns: [make, model, model_year, component_group]
+    columns:
+      - name: hotspot_ix
+        data_tests: [not_null]
+  - name: dim_recalls
+    columns:
+      - name: component_group
+        data_tests: [not_null]

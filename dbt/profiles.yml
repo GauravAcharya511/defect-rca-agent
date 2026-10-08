@@ -1,0 +1,12 @@
+defect_rca:
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      host: "{{ env_var('PG_HOST', 'localhost') }}"
+      port: "{{ env_var('PG_PORT', '5433') | int }}"
+      user: rca
+      password: rca
+      dbname: rca
+      schema: public
+      threads: 4

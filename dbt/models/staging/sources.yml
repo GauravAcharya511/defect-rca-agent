@@ -1,0 +1,9 @@
+version: 2
+sources:
+  - name: bronze
+    schema: bronze
+    tables:
+      - name: nhtsa_complaints_flat
+        description: NHTSA complaint flat-file rows, one per complaint x component x vehicle
+      - name: nhtsa_recalls_raw
+        description: NHTSA recalls API payloads, one per campaign x vehicle

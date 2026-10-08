@@ -1,0 +1,19 @@
+name: defect_rca
+version: "1.0.0"
+profile: defect_rca
+model-paths: ["models"]
+macro-paths: ["macros"]
+test-paths: ["tests"]
+on-run-start:
+  - "{{ create_try_date() }}"
+models:
+  defect_rca:
+    staging:
+      +schema: silver
+      +materialized: view
+    intermediate:
+      +schema: silver
+      +materialized: table
+    marts:
+      +schema: gold
+      +materialized: table

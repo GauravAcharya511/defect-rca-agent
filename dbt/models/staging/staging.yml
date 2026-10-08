@@ -1,0 +1,28 @@
+version: 2
+models:
+  - name: stg_complaints
+    data_tests:
+      - unique_combination:
+          arguments:
+            columns: [odi_number, component, make, model, model_year]
+    columns:
+      - name: odi_number
+        data_tests: [not_null]
+      - name: component_group
+        data_tests: [not_null]
+      - name: received_date
+        description: Date NHTSA received the complaint; should always parse
+        data_tests:
+          - not_null:
+              config:
+                severity: warn
+  - name: stg_recalls
+    data_tests:
+      - unique_combination:
+          arguments:
+            columns: [campaign_number, make, model, model_year]
+    columns:
+      - name: campaign_number
+        data_tests: [not_null]
+      - name: component_group
+        data_tests: [not_null]

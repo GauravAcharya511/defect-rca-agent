@@ -1,0 +1,13 @@
+version: 2
+models:
+  - name: int_complaints
+    data_tests:
+      - unique_combination:
+          arguments:
+            columns: [odi_number, make, model, model_year]
+    columns:
+      - name: description
+        data_tests:
+          - not_null:
+              config:
+                severity: warn
