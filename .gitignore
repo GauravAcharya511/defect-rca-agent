@@ -9,3 +9,4 @@ dbt/dbt_packages/
 .venv-dbt/
 .airflow/
 .venv-airflow/
+.venv-ml/

@@ -1,0 +1,12 @@
+{
+  "backend": "hashing-bow-384",
+  "k": 5,
+  "queries": 500,
+  "corpus_complaints": 7637,
+  "precision@5": 0.5312,
+  "random@5": 0.2388,
+  "lift": 2.22,
+  "hit@5": 0.856,
+  "latency_ms_p50": 1.69,
+  "latency_ms_p95": 2.79
+}

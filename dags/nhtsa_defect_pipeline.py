@@ -2,7 +2,7 @@
 Weekly NHTSA defect pipeline.
 
     ingest_recalls ─┐
-                    ├─> audit_completeness_gate ─> dbt_build
+                    ├─> audit_completeness_gate ─> dbt_build ─> embed_complaints
  ingest_complaints ─┘
 
 Each step runs in its own virtualenv through BashOperator (dbt and Airflow pin
@@ -18,6 +18,7 @@ from airflow.sdk import DAG
 ROOT = Path(os.environ.get("RCA_PROJECT_ROOT", Path(__file__).resolve().parents[1]))
 PY = ROOT / ".venv" / "bin" / "python"
 DBT = ROOT / ".venv-dbt" / "bin" / "dbt"
+ML = ROOT / ".venv-ml" / "bin" / "python"
 
 default_args = {
     "owner": "gaurav",
@@ -60,4 +61,11 @@ with DAG(
         execution_timeout=timedelta(minutes=20),
     )
 
-    [ingest_recalls, ingest_complaints] >> audit_gate >> dbt_build
+    embed_complaints = BashOperator(
+        task_id="embed_complaints",
+        bash_command=f"cd {ROOT} && TOKENIZERS_PARALLELISM=false {ML} rag/embed_complaints.py --backend minilm",
+        retries=1,
+        execution_timeout=timedelta(minutes=45),
+    )
+
+    [ingest_recalls, ingest_complaints] >> audit_gate >> dbt_build >> embed_complaints

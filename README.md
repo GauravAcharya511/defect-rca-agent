@@ -9,7 +9,7 @@ root-cause reports for engineering review.
 |---|---|---|
 | 1 | Ingestion: recalls via NHTSA REST API, complaints via NHTSA bulk flat files; SHA-256 idempotent upserts, retry/backoff, per-run audit table | Done |
 | 2 | dbt silver/gold models, component hotspot index, 16 data tests; weekly Airflow DAG with a completeness gate that blocks dbt if any vehicle-year loads empty | Done |
-| 3 | Embeddings + pgvector retrieval | Planned |
+| 3 | pgvector retrieval over 8.1K complaint narratives (12.1K chunks, HNSW); MiniLM precision@5 0.775 vs 0.531 keyword baseline vs 0.239 random (3.25x lift), p95 2.4 ms; incremental re-embedding | Done |
 | 4 | Tool-calling RCA agent with engineering-review handoff | Planned |
 | 5 | Evaluation harness (accuracy, groundedness, abstention) with CI gate | Planned |
 | 6 | FastAPI (REST + WebSocket) + React investigation UI | Planned |
